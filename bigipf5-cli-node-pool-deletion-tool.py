@@ -3,16 +3,23 @@ import subprocess
 import sys
 import time
 from datetime import datetime, timedelta
-import icontrol.exceptions
+#import icontrol.exceptions
 
 server = ""
 user = ""
 password = ""
 
 try:
+    from icontrol.session import exceptions
+except ImportError:
+    print("Missing required f5 exception module 'f5-icontrol-rest' Will try to install now")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "f5-icontrol-rest"])
+
+try:
     import f5.bigip
 except ImportError:
-    print("Missing required f5 SDk. 'ManagementRoot'")
+    print("Missing required f5 SDk. 'ManagementRoot' Will try to install now")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "f5-sdk"])
 
 try:
     from yaspin import yaspin
@@ -27,7 +34,7 @@ except ImportError:
     subprocess.check_call([sys.executable, "-m", "pip", "install", "yaspin"])
 
 sys.setrecursionlimit(
-    10000)  # Allow python to recurse more than the default 999. There are over 4000 Pools we need to iterate through :(
+    10000)  # Allow python to recurse more than the default 999.
 
 
 class bcolors:
