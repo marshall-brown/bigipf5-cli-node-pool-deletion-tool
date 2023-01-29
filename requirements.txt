@@ -1,2 +1,2 @@
-      f5sdk.bigip
-      yaspin
+f5-sdk-python
+yaspin
