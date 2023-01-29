@@ -1,9 +1,10 @@
+#TODO virtualenv
 import ipaddress
 import subprocess
 import sys
 import time
 from datetime import datetime, timedelta
-#import icontrol.exceptions
+from f5sdk.bigip import ManagementClient
 
 server = ""
 user = ""
@@ -15,8 +16,9 @@ except ImportError:
     print("Missing required f5 exception module 'f5-icontrol-rest' Will try to install now")
     subprocess.check_call([sys.executable, "-m", "pip", "install", "f5-icontrol-rest"])
 
+
 try:
-    import f5.bigip
+    import f5sdk.bigip
 except ImportError:
     print("Missing required f5 SDk. 'ManagementRoot' Will try to install now")
     subprocess.check_call([sys.executable, "-m", "pip", "install", "f5-sdk"])
@@ -50,8 +52,8 @@ class bcolors:
 
 
 try:
-    mgmt = f5.bigip.ManagementRoot(server, user, password)
-    ltm = mgmt.tm.ltm
+    device = ManagementClient(server, user, password)  # declared up
+    ltm = mgmt.tm.ltm  #TODO refactor to new sdk
 except icontrol.exceptions.iControlUnexpectedHTTPError as e:
     sys.exit(bcolors.FAIL + "Cannot authenticate please check your credentials \n ------- \n Error Thrown: \n" + str(
         e) + bcolors.ENDC)
